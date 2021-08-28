@@ -1,0 +1,34 @@
+Injection attacks occupy the no. 1 spot in the OWASP Top 10 (available as PDF and as HTML ).
+
+Mandatory viewing: youtube presentation about path traversal attack on Starbucks. (If you're curious you can look at the original write-up by the attack by Sam Curry, who found the bug, in this blog entry, but that is not required reading; the essence of the attack is much clearer in the youtube presentation.)
+
+Mandatory reading: funny news story on a NULL license plate which turned out to (not) be an interesting injection attack. (Option viewing material: you can also look a the DEFCON 2019 presentation about this.)
+
+Exercises week 3
+
+Deadline for these assignments: Monday Sept  21 28, 23:59  
+
+    Start with the WebGoat lessons from 'SQL injection (intro)', under Webgoat Injection Flaws.
+        Some strange behaviour of this  lesson that may be confusing: if you select more than one row from the database, with e.g. SELECT * FROM ... , the page reports NO RESULTS , but if you select exactly one row, with e.g. ... WHERE firstname = 'Tom' , then the page does report a result. Also note that Dave's username is actually 'dave'
+        WebGoat's database only accepts strings that are surrounded by single quotes (e.g. 'my text'). Double quoted strings (e.g. "my text") or strings quoted with backticks (e.g. `my text`) won't work.
+    Do levels 0,1,2,3, and 4 on websecurity.cs.ru.nl The websecurity.cs.ru.nl assignments are handed in automatically as you complete them. NB if you are working in pairs, both of you need to complete the assignment in websecurity.cs.ru.nl.
+        For this website you need your faculty Science login, not your s-account. (See CNCZ explanation about the difference; contact the Student Service Desk if you don't know your Science account details.)
+        Some hints are at the bottom of this page if you need them!
+    Optional exercises, if you want to get some more experience with web hacking or defenses against it: Under WebGoat injection flaws, do the lessons
+        SQL injection (mitigation)
+            The example SQL statement on step 9, select * from users order by (case when (true) then lastname else firstname), is incorrect, as it misses an "end" at the end, and it should be select * from users order by (case when (true) then lastname else firstname END)
+        SQL injection (advanced)  
+            Something unexpected to watch out for: the user account of Tom (with capital T) is tom (with lower case T)
+            There is a small bug in this lesson: some of the steps do not colour green even though you have successfully completed them.
+
+ 
+
+ 
+
+ Hints for websecurity.cs.ru.nl: (stop reading if you want an extra challenge!)
+
+ 
+
+    Level 0 is a very simple information leakage. To base64-encode or -decode something, there are online websites, such as https://www.base64decode.net
+    Level 1 & 2 are SQL injections, 3 & 4 are path injections.
+    To take the SQL UNION of two tables, these tables need to have the same number of columns. You can simply repeat a column multiple times to get the right number.

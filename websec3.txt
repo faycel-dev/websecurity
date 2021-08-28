@@ -1,0 +1,43 @@
+
+    JavaScript: demo_javascript
+    the functionality of the DOM API accessibel from JavaScript: demo_DOM, demo_DOM2
+    the restrctions of the SOP (Same Origin Policy) : test_SOP
+    XSS via the DOM: xss_via_DOM  (maybe this example will not be treated till next week)
+
+Exercises week 4
+
+Deadline for these assignments: Monday next week (Sept 28 23:59).
+
+    1. Do level 5 & 6 of websecurity.cs.ru.nl. Carefully read the additional info below, as these are a bit more involved than the earlier exercises, as was also explained in the lecture.
+    2. Do the WebGoat lesson on Cross-Site Scripting (XSS).
+    3. Go to demo_DOM and click the button at the bottom,  labelled 'Exercise to explore the DOM from the console' . In the newly opened tab, follow the instructions. This should only take a few minutes. Aim of this exercise is simply to find out about the web console as a convenient way to interactively explore the functionality of the browser that is accessible from a webpage - more specifically, from JavaScript in a webpage - via the DOM API.
+
+For level 5 & 6 you have to inject a script to steal cookies. The idea is that the scripts you inject are executed in the browser of the system administrator of the websecurity.cs.ru.nl website, so with the access rights and the cookie values of this sys-admin. (We have an automated script acting as a virtual sys-admin here, and this virtual admin is stupid enough to click on any - potentially malicious - links that are sent to them.) 
+
+Illustration of the attack scenario forlevel 5 & 6
+
+To retrieve the cookies that you steal from this virtual sys-admin, you will need some infrastructure connected to the internet that 1) provides an IP address or URL where the injected script can send the cookie to and 2)  stores any cookie values received so that you can inspect these later. The easiest solution for this is to use a free website that provides a URL as endpoint to send traffic to. Directly below we give links to three of these sites. At the bottom of this page we give two alternatives to using such an endpoint.
+
+    Create an endpoint at httpdump.io. You will get a URL of the form http://httpdump.io/<random> that you can use in your attack script. At http://httpdump.io/<random>/dumpyard you can inspect any data that is sent there.
+    Create an endpoint (or what this site calls a requestbin) at https://requestbin.io. You then get a URL of the form http://requestbin.io/<random> that your attack script can send requests to.  At https://requestbin.io/<random>?inspect you can inspect the traffic that has been sent to this URL.
+    Create an endpoint at https://beeceptor.com. You can get URL of the form http://<bla>.free.beeceptor.com that your attack script can send requests to, and you can inspect the incoming traffic at this URL at https://beeceptor.com/console/<bla>
+
+Some tricky details to pay attention to for exercises 5 & 6:
+
+    The https://websecurity.cs.ru.nl/ certificate has expired, so only submit URLs starting with http://websecurity.cs.ru.nl/
+    The browser script does not handle https URLs particularly well in general, so avoid URLs like https://httpdump.io/<random>
+    Copying quotes from the slides may give you curly quotes which won't work (”) instead of normal ones (")
+    Make sure to properly URL encode your parameters
+    Many fancy techniques like using Images will not work in the virtual browser script on the server, even if they do work in your own browser
+    Hint for level 6: the input sanitisation at level 6 strips occurrences of <script> from the input, but you can by-pass (or maybe better put, abuse) this sanitisation so that there will still <script> tags in the resulting string. There is no need to resort to using obscure HTML tags or attachment types, such as svg, to complete this level.
+
+Alternatives to using an endpoint provided by one of the sites above are:
+
+    If you have a Linux machine where you can run netcat,  a simple solution, maybe even simpler than using an endpoint, is using netcat: you can simply use netcat -lvp 80 to listen to port 80 and then use the IP address of this machine in your attack script as the place to send the cookie.
+    You can also set up a web server somewhere, e.g. at some free hosting provider, and run some code there to receive incoming cookies. An example of some PHP code to do this is given below: the code retrieves a parameter called "cookie" from the URL and writes it to a file cookielog.txt .        
+
+       <?php $cookie = $_GET["cookie"];                                                 
+
+             $file = fopen('cookielog.txt', 'a');
+
+               fwrite($file, $cookie . "\n\n");          ?> 

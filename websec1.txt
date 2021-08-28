@@ -1,0 +1,94 @@
+Information you enter into a webpage may be validated and sanitised at the client-side (i.e. by the browser, before being sent to the server). Such client-side processing is then done by JavaScript code executing in the browser. It may include sanity checks for invalid or missing inputs (for instance, rejecting a malformed email address, or rejecting February 31st as date). It may also involve the removal or encoding of special characters and keywords that may cause problems when processing the data further down the line.
+
+Obviously, it is trivial for a malicious user to by-pass any client-side checks, by using a proxy and editing outgoing requests after they has been sanitised. So a website should never rely on client-side checks for security. Instead of - or in addition to - client-side checks, there should also be server-side checks on input.
+
+The goal of this exercise is to figure out if and how Brightspace sanitises forum postings, client side and server side.
+
+The exercise
+
+Part 1: Client-side sanitisation
+
+Go to the Brightspace discussion forum (under Activities) "How does Brightspace encode user input in discussions?"
+
+Start some new threads in the Brightspace discussion forum. These messages have a (single-line) subject and a (multi-line) body.
+
+In your postings, try out including
+
+    the special URL characters <space> and /
+    the special HTML characters < > &
+    single and double quotes
+    the HTML keyword <script>, e.g. <script> alert("Hello World!"); </script>
+
+in both the subject and in the body of posting. Look at the outgoing HTTP traffic (either in ZAP, or the Network Inspector in Firefox) to see how the characters are encoded in the HTTP request. Some characters or words may also be removed from the traffic. This sanitisation is done client-side: it is done in your browser,  by javascript code that is in included in the Brightspace site and that is executed by your web browser.
+
+Describe concisely and precisely,  in one or two sentences, how the subjects of postings are sanitised and how the bodies of posting are sanitised at client-side.  You can start off making a table, but then try to describe how the mapping works, e.g. in terms of the URL-encodings and HTML-encodings discussed in the lecture.
+
+Tip: if you start the subject and body with some fixed strings, e.g. XXXXXX and YYYYYYYY, it is easy to find them in the HTTP traffic.
+
+For this assignment it can be useful to use one of the many websites where you can experiment with URL-en/decoding or  HTML-en/decoding of text, for instance urlencoder.org and onlinetexttools.com/html-encode-text. You can also do URLdecoding using JavaScript that you type in at the "Web Console" window of your web browser. In Firefox this is under "Developer Tools -> Web Console". There you can type decodeURIComponent('SOME STRING') and execution of that JavaScript code will then return SOME STRING URL-decoded.
+
+Part 2: Server-side sanitisation
+
+Now answer the same question, but for the server-side sanitisation. Here you have to use a proxy (or the edit request option of your browser) to insert special characters or keywords that are stripped or encoded by any client-side sanitisation.  Again, it is easiest to include some recognisable strings in the header and body, e.g. XXXXXX and YYYYYYYY, and then edit the outgoing response by adding the special characters at the places of these strings.
+Now check how the see how the characters are rendered when you look at your posting later. It may be the case that characters are removed. It may also be the case that posting are rejected completely if they include some offending characters.
+
+Describe concisely and precisely, in one or two sentences how subjects of posting and how and bodies of the posting are encoded and sanitised - or rejected - server-side.
+
+Of course, it is impossible to tell if such server-side sanitisation is done by the Brightspace back-end at the moment it processes an incoming HTTP request (which would be server-side input sanitisation) or at the moment when it generates the HTML for outgoing HTTP response it sends back (which would be server-side output sanitisation).
+
+Exercise B. Cookies & HTTPS settings
+
+For 5 websites where you have a login, check the cookie & HTTPS settings,
+as described in more detail below. Try to include some more non-standard websites, so that we don't all try the same ones - the usual suspects such as gmail.com and facebook.com. And try to include some high security sites (e.g. your bank) and some sites where you think security might not be much of an issue. This way we can a nice impression of what a broad sample of typical web sites currently use. It will be interesting to see if many sites use the newer protection mechanisms - HSTS, CT, SameSite, etc - these days.
+
+Part 1
+
+Log in, and then report for the session cookie(s)
+
+    the name of the cookie
+    the settings of the HttpOnly, Secure, and SameSite security flags
+
+The HttpOnly and Secure flags can be either set or unset. Only the SameSite flag can be set to different values, namely lax or strict. 
+
+Below more info on checking this, and on figuring out which cookie is (or might be) the "real" session cookie that holds the session id.
+
+Part 2
+
+Check if the website
+
+    allows HTTP, HTTPS, or both
+    uses EV certificates
+    uses HPKP (which has been abandoned but maybe some site still use it?)
+    uses HSTS
+    is included in the HSTS Preload list (https://hstspreload.org/)
+    and if not, if it is eligible to be included
+    if certificates for the sites are in the Certificate Transparency Log (https://crt.sh)
+
+More info on how to figure this out below.
+
+Report the info for the 5 sites in part 1 & 2 in this spreadsheet format and hand it in as .xlsx file. I'll collect and summarise the info to get an impression of what sites "typically" use nowadays.
+
+More info & pointers
+
+    You can inspect Cookies in FireFox in the "Storage" Window in the "Developer Tools", under Tools -> Developer Tools -> Application -> Storage. You can also delete cookies there, or under the "Security & Privacy" settings.  You can also see them in the HTTP traffic, of course, for instance using ZAP, but it may be harder to spot them there.
+    There may be many cookies, and it may not be clear which one
+    is the "real" session cookie, ie. the cookie the identifier for the session for which
+    you are now logged in. To try to which cookie(s) this is/are
+        it should have a long random-looking value;
+        it should appear or change when you log in, and disappear/change again
+        when you log out;
+        if you remove the cookie, you should be logged out (though on website pages like Brightspace, which use Single Sign On, this may not happen)
+
+If there are several such cookies, report the security settings of the best-protected one. There many not be a single best-protected cookie. Eg., there could be two, one cookie that is Secure but not HttpOnly, and another that is HttpOnly but not Secure. In such cases, simply report all cookies that are "best" in some respect.
+
+    If a site has an EV certificate then often the name of the company is shown beside the padlock, or when you click on the padlock
+    To see if a site uses HSTS or HPKP, you can check if the HTTP header includes
+    Strict-Transport-Security for HSTS and Public-Key-Pins for HPKP.
+
+You can check the presence of these HTTP headers in a proxy or by inspecting HTTP traffic in Firefoxor using one of the many websites to do this, e.g. https://securityheaders.com or https://gf.dev/http-headers-test.
+
+Linux users can check this from the command line with "curl -s -D- https://ru.nl | grep Strict".
+
+    If you come across a certificate where the fingerprint in crt.sh does not match the one in the certificate, you should definitely warn them :-) If you come across a site still using HPKP, maybe you should warn them not to...
+
+Once you've got the hang of all this and learnt where to find the information, you can also use https://www.ssllabs.com/ssltest/

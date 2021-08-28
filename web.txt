@@ -1,0 +1,36 @@
+Additional mandatory reading material: read Steven Englehardt's blog post on email tracking.
+
+Not exam material, but funny: Big Brother Pizza company.
+
+Not exam material, but highly recommended, for your general awareness as the wider societal issues raised by modern IT: watch The Social Dilemma on Netflix. (This documentary-drama is mainly about first-party tracking, by social media websites such as Facebook, Youtube, Instagram, etc. and not about tracking by third parties, which was an important theme in the lecture. Also, the issue of user profiling to then target content, which is the focus of of this Netflix documentary, is clearly related to privacy, but it is a wider issue: even if users are anonymous, a website may still be able to profile them. For instance, if you visit Youtube as anonymous user, Youtube will still be able to profile you based on what you watch and use that information to steer them down a particular rabbithole that you are susceptible to.)
+
+Exercises week 6
+
+Below the assignments for week 6. Only assignment A has to be handed in, via Brightspace. Deadline for this is Sunday Oct 11 23:59, so that we can discuss your findings on the lecture the following Tuesday.
+Expand All
+Collapse All
+List of Topics and Sub-Modules for Week 6: Privacy
+Modules
+
+    Excercise A. Webmail privacy
+
+    Goal of this exercise is to see how well a typical webmail site in combination with a typical browser protect against the leaking of cookies
+
+    A webmail site is simply a website that lets you view and send email. An obvious choice is gmail.com, but nice if we try some different sites, so that we get an overview of how various webmail sites handle this. In particular, it would be nice to see how the university web mail sites, such as mail.ru.nl, roundcube.science.ru.nl and rainloop.science.ru.nl, handle web beacons in HTML emails.
+
+    Just use the browser you always use and don't tweak its privacy settings before you do the assignment. (Maybe you do want to tweak these settings after the exercise :-)
+        Send yourself an email in HTML format that contains an image retrieved via a URL U from some domain W. The image file does not necessarily have to exist; the HTTP request to retrieve it is sent anyway and that is all we are interested in. Still, if the image does exist it is easier to see if it was loaded or not. Make sure that the image isn't just added as an attachment. Hint: the Roundcube science mail client allows this: roundcube.science.ru.nl (log in with your science account).
+            The URL U has to include your first and last name and student number, for instance in some unnecessary parameter in the URL http://W/about/images/usermatch.gif?leakedinfo=JohnSmithS123456.
+            The domain W has to be a domain that sets a cookie in your browser when you visit it. This could be a cookie that is set when you log in, say facebook.com, but it can also be a cookie that is set when you simply visit the website, say when you visit nu.nl or ru.nl - and you accept cookies from that site.
+            If your webmail client does not have an option to include an image on an external URL or an option to edit HTML, you might be able to edit the HTML directly in Firefox by doing the following:
+                Right click the body text of your mail
+                Choose "Inspect Element"
+                Select an element inside the body text, and press F2 to edit its HTML directly
+                Insert an <img> tag that points to your URL
+        Before or after sending yourself the email, go to website W  and check that there is a cookie sent along with HTTP requests to W. So you may have to login for this.
+        In another browser tab, access the email you sent yourself in a webmail site.
+        In the outgoing HTTP request to retrieve the image U, check if the W cookie is sent along with that request. Some webmail clients do not show images by default and ask you permission before doing that; in that case, give permission.  (There is probably no need to use a proxy here, simply inspecting the network traffic window in the browser should work.)
+        If you see the cookie, make a screenshot of the web traffic (as in slide 36 &37 of this week's lecture) and highlight the cookie for W being sent and the url U in that screenshot in some way (eg by underlying, coloring or circling or otherwise marking these lines).
+        This step is only for the case if the W cookie is not being sent in step 5. If for some reason the cookie is not being sent, there may be several reasons for this: (i) your browser may be blocking 3rd party cookies; (ii) the domain W may be a well-known tracking domain that is blacklisted in the tracking protection provided your browser (e.g. Firefox's Tracking Protection aka Content Blocking); (iii) the webmail site may be proxying the images. There may other reasons I cannot think of here. Try to loosen the permissions in your browser, for instance by allowing all cookies, incl. 3rd party ones, or turning off the browser's tracking protection. The expectation is that only in case (iii) you will not be able to get the browser to send the cookie; in that case, take a screenshot of the outgoing traffic that shows the image being retrieved not from site W but from (or rather, via) some proxy site X that the webmail site uses.
+
+    Complete the text below to summarise the outcome of your experiment, and hand this in (as a pair) as short .docx, .odt, or PDF file via Brightspace, together with the screenshot (as png, gif, ...) of the webtraffic showing the request to obtain the image obtained in step 5 (or 6) above.

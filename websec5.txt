@@ -1,0 +1,21 @@
+
+    check if your browser detects this URL obfuscation attack
+    basic clickjacking
+    UI redressing (iframe and transparant iframe)
+    A frame busting page,  this page busting out of a frame, and this page failing to bust out of a page due to sandboxing
+    cursor jacking
+
+Read
+
+    Blog posting about spoofed Facebook login pop-up window
+    Blog posting about Facebook clickjacking vulnerability
+
+Exercises week 5
+
+    Use xss_via_DOM to make a malicious URL that triggers a DOM-based XSS that opens a new tab in the victim's browser, and try to see if you can open multiple new tabs. See demo_DOM for how you open up a new tab with JavaScript. 
+    Do the remaining levels of websecurity.cs.ru.nl. NB you can still use the next 2 lab sessions for to complete earlier assignments, so use that opportunity if you had problems or got stuck. Deadline for these is Wednesday Oct 14 23:59, so that you still have 3 lab sessions to get these sorted.
+
+Additional hints:
+
+    for level 6: the input sanitisation at level 6 strips occurrences of <script> from the input, but you can (ab)use this sanitisation so that there are still <script> tags in the resulting string. There is no need to resort to other tags, such as svg, to complete this level.
+    for level 7: you will have to look up information online about strcmp in PHP and about ways using it can go wrong. You probably have to use ZAP for this, as entering weird input is not going to get you there.
